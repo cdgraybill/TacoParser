@@ -12,10 +12,17 @@ namespace LoggingKata.Test
         }
 
         [Theory]
-        [InlineData("Example")]
-        public void ShouldParse(string str)
+        [InlineData("34.073638,-84.677017,Taco Bell Acwort...", "Taco Bell Acwort...")]
+        public void ShouldParse(string line, string expected)
         {
-            // TODO: Complete Should Parse
+            // Arrange
+            var parser = new TacoParser();
+
+            // Act
+            var actual = parser.Parse(line);
+
+            // Assert
+            Assert.Equal(expected, actual.Name);
         }
 
         [Theory]

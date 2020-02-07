@@ -16,11 +16,38 @@ namespace LoggingKata
 
             var lines = File.ReadAllLines(csvPath);
 
-            logger.LogInfo($"Lines: {lines[0]}");
-
             var parser = new TacoParser();
 
             var locations = lines.Select(parser.Parse).ToArray();
+
+            ITrackable location1 = locations[0];
+            ITrackable location2 = locations[0];
+
+            GeoCoordinate CorA = new GeoCoordinate(location1.Location.Latitude, location1.Location.Longitude);
+            GeoCoordinate CorB = new GeoCoordinate(location2.Location.Latitude, location2.Location.Longitude);
+
+            double distance = CorA.GetDistanceTo(CorB);
+
+            for (int i = 0; i < locations.Length; i++)
+            {
+                for (int x = i + 1; x < locations.Length; x++)
+                {
+                    GeoCoordinate locA = new GeoCoordinate(locations[i].Location.Latitude, locations[i].Location.Longitude);
+                    GeoCoordinate locB = new GeoCoordinate(locations[x].Location.Latitude, locations[x].Location.Longitude);
+
+                    double locDistance = locA.GetDistanceTo(locB);
+
+                    if (locDistance > distance)
+                    {
+                        distance = locDistance;
+                        location1 = locations[i];
+                        location2 = locations[x];
+                    }
+                }
+            }
+            Console.WriteLine($"Location 1: {location1.Name}");
+            Console.WriteLine($"Location 2: {location2.Name}");
+            Console.WriteLine(distance);
 
             // TODO:  Find the two Taco Bells in Alabama that are the furthest from one another.
             // HINT:  You'll need two nested forloops
