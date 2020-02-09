@@ -2,6 +2,7 @@
 using System.Linq;
 using System.IO;
 using GeoCoordinatePortable;
+using System.Threading;
 
 namespace LoggingKata
 {
@@ -12,7 +13,13 @@ namespace LoggingKata
 
         static void Main(string[] args)
         {
-            logger.LogInfo("Log initialized");
+            logger.LogInfo("Log initialized.");
+            Console.WriteLine("Running comparisons in 3...");
+            Thread.Sleep(1000);
+            Console.WriteLine("2...");
+            Thread.Sleep(1000);
+            Console.WriteLine("1...");
+            Thread.Sleep(1000);
 
             var lines = File.ReadAllLines(csvPath); //Calling all locations
 
@@ -32,12 +39,17 @@ namespace LoggingKata
             {
                 for (int x = i + 1; x < locations.Length; x++)
                 {
+                    int counter = 0; // Counter to show comparisons. Not efficient but helps visualize what's happening for the sake of this exercise
+                    counter += x;
+
                     GeoCoordinate locA = new GeoCoordinate(locations[i].Location.Latitude, locations[i].Location.Longitude);
                     GeoCoordinate locB = new GeoCoordinate(locations[x].Location.Latitude, locations[x].Location.Longitude);
 
                     double locDistance = locA.GetDistanceTo(locB);
 
-                    if (locDistance > distance)
+                    Console.WriteLine($"Comparing location number {counter}...");
+
+                    if (locDistance > distance) // Grabbing new location for answer if distance is greater than the previous comparison
                     {
                         distance = locDistance;
                         location1 = locations[i];
@@ -45,9 +57,21 @@ namespace LoggingKata
                     }
                 }
             }
-            Console.WriteLine($"Location 1: {location1.Name}"); // Printing answer
+            Console.WriteLine();
+            Console.WriteLine("Comparisons complete! Loading answer..."); // Printing answer
+            Thread.Sleep(3000);
+
+            Console.WriteLine("");
+
+            Console.WriteLine("Answer:");
+            Thread.Sleep(1000);
+            Console.WriteLine($"Location 1: {location1.Name}");
+            Thread.Sleep(500);
             Console.WriteLine($"Location 2: {location2.Name}");
-            Console.WriteLine(distance);
+            Thread.Sleep(500);
+            Console.WriteLine($"Distance between coordinates: {distance}");
+
+            Console.ReadLine();
         }
     }
 }
